@@ -1,50 +1,33 @@
 import { Router, Request, Response } from "express";
 import { accounts } from "../../accounts";
+import {
+  createAccount,
+  deleteAccount,
+  getAllAccounts,
+  updateAccount,
+} from "./accounts.controller";
 
 const accountRoutes = Router();
 
 // Inline controller: Get all cakes
 accountRoutes.get("/accounts", (req: Request, res: Response): void => {
-  res.status(200).json(accounts);
+  // alert("getAllAccounts");
+  console.error("getAllAccounts ");
+  getAllAccounts(req, res);
 });
 accountRoutes.post("/accounts", (req: Request, res: Response): void => {
-  const newAccount = {
-    id: Date.now(),
-    username: req.body,
-    funds: 0,
-  };
-  accounts.push(newAccount);
-  res.status(201).json(accounts);
+  createAccount(req, res);
 });
 accountRoutes.put(
   "/accounts/:accountId",
   (req: Request, res: Response): void => {
-    const { accountId } = req.params;
-    const index = accounts.findIndex((acc) => acc.id === Number(accountId));
-    if (index >= 0) {
-      const updatedAccount = {
-        id: accounts[index].id,
-        username: req.body,
-        funds: accounts[index].funds,
-      };
-      accounts[index] = updatedAccount;
-      res.status(200).json(updatedAccount);
-    } else {
-      res.status(404).send("Account not found");
-    }
+    updateAccount(req, res);
   }
 );
 accountRoutes.delete(
   "/accounts/:accountId",
   (req: Request, res: Response): void => {
-    const { accountId } = req.params;
-    const index = accounts.findIndex((acc) => acc.id === Number(accountId));
-    if (index >= 0) {
-      accounts.splice(index, 1);
-      res.status(204).send();
-    } else {
-      res.status(404).send("Account not found");
-    }
+    deleteAccount(req, res);
   }
 );
 
